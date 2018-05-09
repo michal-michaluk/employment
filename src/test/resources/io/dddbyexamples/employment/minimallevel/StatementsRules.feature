@@ -1,4 +1,4 @@
-Feature: weryfikacja poprawnosci skladanych oświadczeń w damym roku akademickim
+Feature: weryfikacja poprawnosci skladanych oświadczeń w danym roku akademickim
 
   dwa oswiadczenia na rok akademicki lub jedno
   - jedno na pierwszego stopnia
@@ -6,11 +6,10 @@ Feature: weryfikacja poprawnosci skladanych oświadczeń w damym roku akademicki
   - lub tylko jedno na studia jednolite
   - wspolne oswiadczenie na pierwszy i drugi stopien tego samego kierunku
 
-  maksymalnie dwa i maxymalnie jedno na drugi stopien
-
+  maksymalnie dwa i maxymalnie jedno na drugi stopien\
 
   Background:
-
+    Given istnieje prawidłowe zatrudnienie umożliwiające dodanie oświadczenia o minimum kadrowym
 
   Scenario: jedno wspólne oswiadczenie
     Given nie ma oświadczeń na dany rok akademicki
@@ -72,3 +71,4 @@ Feature: weryfikacja poprawnosci skladanych oświadczeń w damym roku akademicki
     Given oswiadczenie na rok "2018" pierwszego stopnia "Informatyka poz. 1+2." "30h"
     When wprowadz oswiadczenie wspólne "Matematyka poz. 1." "30h"
     Then oswiadczenie zostanie złożone
+
