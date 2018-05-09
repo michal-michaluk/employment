@@ -32,8 +32,7 @@ Feature: zawieszanie / odwieszanie oświadczenia wzwiązku z właściwościami k
   Scenario: Dodajemy trzy kierunki w jednym oświadczeniu (z fizjoterapią)
     Given nie ma oświadczeń na dany rok akademicki
     When wprowadz oświadczenie "Matematyka poz. 1.", "Informatyka poz. 1.", "Fizjoterapia poz. 1." z liczbą godzin "30h"
-    #Then // todo: dopytać analityka
-
+    Then oswiadczenie nie zostanie przyjęte z komunikatem "R_????"
 
   Scenario: Dodajemy oświadczenie z kierunkiem bez uruchomionych studiów w danym roku akademickim
     Given nie ma oświadczeń na dany rok akademicki

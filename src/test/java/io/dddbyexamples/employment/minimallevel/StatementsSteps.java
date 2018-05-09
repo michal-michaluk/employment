@@ -6,55 +6,55 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.dddbyexamples.rules.Ruleska;
 import lombok.Value;
+import org.assertj.core.util.Lists;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StatementsSteps {
+    private static final int DEFAULT_HOURS_IN_STATEMENT = 30;
 
-    StatementsRules subject;
+    private StatementsRules subject = new StatementsRules();
     private Result result;
+    private Map<String, CourseOfStudyDefinition> courses = new HashMap<>();
+    private List<Statement> statements = new ArrayList<>();
+
 
     @Given("^istnieją studia:$")
     public void istniejąStudia(List<CourseOfStudyDefinition> courseOfStudies) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        courses = courseOfStudies.stream()
+                .collect(Collectors.toMap(CourseOfStudyDefinition::getName, Function.identity()));
     }
 
     @Given("^istnieje prawidłowe zatrudnienie umożliwiające dodanie oświadczenia o minimum kadrowym$")
     public void istniejePrawidłoweZatrudnienieUmożliwiająceDodanieOświadczeniaOMinimumKadrowym() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        //todo: zaimplementować
+
     }
 
     @Given("^nie ma oświadczeń na dany rok akademicki$")
     public void nieMaOświadczeńNaDanyRokAkademicki() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
-
-    @Given("^istniejace oswiadczenie wspólne \"([^\"]*)\"$")
-    public void istniejaceOswiadczenieWspólne(List<String> courseOfStudies) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        statements = new ArrayList<>();
     }
 
     @Given("^istniejace oswiadczenie \"([^\"]*)\"$")
-    public void istniejaceOswiadczenie(String courseOfStudy) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void istniejaceOswiadczenieWspólne(List<String> courseOfStudies) throws Throwable {
+        List<Course> statementCourses = translateCourses(courseOfStudies);
+
+        Statement statement = new Statement(statementCourses, DEFAULT_HOURS_IN_STATEMENT);
+
+        subject.addExistingStatement(statement);
     }
 
     @When("^wprowadz oswiadczenie \"([^\"]*)\" z liczbą godzin \"([^\"]*)\"$")
-    public void wprowadzOswiadczenieZLiczbąGodzin(String courseOfStudy, String hoursAmount) throws Throwable {
-        Statement statement = new Statement();
-        result = subject.check(statement);
-    }
-
-    @When("^wprowadz oswiadczenie wspólne \"([^\"]*)\" z liczbą godzin \"([^\"]*)\"$")
-    public void wprowadzOswiadczenieWspólne(List<String> courseOfStudies, String hoursAmount) throws Throwable {
-        Statement statement = new Statement();
+    public void wprowadzOswiadczenieZLiczbąGodzin(List<String> courseOfStudy, Integer hoursAmount) throws Throwable {
+        Statement statement = new Statement(translateCourses(courseOfStudy), hoursAmount);
         result = subject.check(statement);
     }
 
@@ -76,9 +76,18 @@ public class StatementsSteps {
                 .contains(true, true);
 
         assertThat(result.getProblems())
-                .extracting(Ruleska::toString)
+                .extracting(Ruleska::getRuleId)
                 .contains(info);
     }
+
+    private List<Course> translateCourses(List<String> courseOfStudies) {
+        return courseOfStudies
+                .stream()
+                .map(name -> courses.get(name))
+                .map(course -> new Course(course.getName(), course.getCourseOfStudy(), CourseProfile.valueOf(course.getProfile()), course.getLevel()))
+                .collect(Collectors.toList());
+    }
+
 
     @Value
     public static class CourseOfStudyDefinition {
