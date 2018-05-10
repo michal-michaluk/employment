@@ -3,7 +3,7 @@ package io.dddbyexamples.employment.minimallevel;
 import lombok.Value;
 
 /**
- * Created by tfert on 09.05.18.
+ * Created by wfred on 09.05.18.
  */
 @Value
 public class StatementLevel {

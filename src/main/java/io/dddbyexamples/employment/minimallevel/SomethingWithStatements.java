@@ -15,20 +15,25 @@ class SomethingWithStatements {
 
     private LevelsOfEmploymentEvents events;
 
-    Result submitStatement(Statement command) {
+    Result submitStatement(Statement statement) {
+
         Result result = Result.combine(
-                statementsRules.check(command),
-                employmentRules.check(command),
-                courseOfStudiesRules.check(command)
+                statementsRules.check(statement),
+                employmentRules.check(statement),
+                courseOfStudiesRules.check(statement)
         );
 
         if (result.isAccepted()) {
-            events.emit(new StatementSubmitted());
+            events.emit(translateToEvent(statement));
 
             if (result.isSuspended()) {
                 events.emit(new StatementSuspended());
             }
         }
         return result;
+    }
+
+    private StatementSubmitted translateToEvent(Statement statement) {
+        return new StatementSubmitted(statement.getCourses(), statement.getHours());
     }
 }
