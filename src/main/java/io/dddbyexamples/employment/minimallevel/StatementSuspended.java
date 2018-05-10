@@ -1,4 +1,4 @@
 package io.dddbyexamples.employment.minimallevel;
 
-class StatementSuspended {
+public class StatementSuspended {
 }
