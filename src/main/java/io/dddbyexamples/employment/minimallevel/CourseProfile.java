@@ -1,7 +1,7 @@
 package io.dddbyexamples.employment.minimallevel;
 
 /**
- * Created by tfert on 09.05.18.
+ * Created by wfred on 09.05.18.
  */
 public enum CourseProfile {
     PRAKTYCZNY(),

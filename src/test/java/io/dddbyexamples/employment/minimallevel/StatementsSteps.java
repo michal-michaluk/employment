@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StatementsSteps {
 
     private static final int DEFAULT_HOURS_IN_STATEMENT = 30;
+    private static final long DEFAULT_COURSE_ID = 123L;
 
     private Map<String, CourseOfStudyDefinition> courses = new HashMap<>();
     private List<Statement> statements = new ArrayList<>();
@@ -100,7 +101,7 @@ public class StatementsSteps {
         int level;
 
         Course createCurse() {
-            return new Course(name, courseOfStudy, profile, level);
+            return new Course(DEFAULT_COURSE_ID, name, courseOfStudy, profile, level);
         }
     }
 }
