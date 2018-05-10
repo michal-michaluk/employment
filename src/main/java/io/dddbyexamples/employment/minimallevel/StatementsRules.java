@@ -1,17 +1,21 @@
 package io.dddbyexamples.employment.minimallevel;
 
-import io.dddbyexamples.rules.Ruleska;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class StatementsRules {
 
-    private Result result = new Result();
-    private List<Statement> existingStatement = new ArrayList<>();
+    private List<Statement> existingStatement;
+    private Ruleski ruleski;
 
-    public Result check(Statement statement) {
+    private Result result;
+
+    StatementsRules(List<Statement> existingStatement, Ruleski ruleski) {
+        this.existingStatement = existingStatement;
+        this.ruleski = ruleski;
+    }
+
+    Result check(Statement statement) {
         result = new Result();
 
         checkAmountOfHours(statement);
@@ -26,14 +30,16 @@ class StatementsRules {
         long sameStatementsDefinition = existingStatement.stream().filter(statement::equals).count();
 
         if (sameStatementsDefinition > 0) {
-            result.addError(new Ruleska("przekroczona ilośc oswiadczen"));
+            //new Ruleska("przekroczona ilośc oswiadczen")
+            result.reject(ruleski.courseDuplicate(statement.getCourses()));
         }
 
     }
 
     private void checkNumberOfStatements(Statement statement) {
         if (existingStatement.size() >= 2) {
-            result.addError(new Ruleska("przekroczona ilośc oswiadczen"));
+            //new Ruleska("przekroczona ilośc oswiadczen")
+            result.reject(ruleski.exceededNumberOfStatements());
         }
     }
 
@@ -48,18 +54,16 @@ class StatementsRules {
         }
 
         if (secondLevelStatemets.size() > 1) {
-            result.addError(new Ruleska("przekroczona ilośc oswiadczen"));
+            //new Ruleska("przekroczona ilośc oswiadczen")
+            result.reject(ruleski.exceededNumberOfStatements());
         }
 
     }
 
     private void checkAmountOfHours(Statement statement) {
         if (statement.getHours() < 30) {
-            result.addError(new Ruleska("za mala ilosc godzin w oswiadczeniu"));
+            //new Ruleska("za mala ilosc godzin w oswiadczeniu")
+            result.reject(ruleski.notEnoughtDeclaredHouers(statement.getHours()));
         }
-    }
-
-    public void addExistingStatement(Statement statement) {
-        existingStatement.add(statement);
     }
 }

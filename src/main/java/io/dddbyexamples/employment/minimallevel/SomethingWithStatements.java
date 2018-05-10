@@ -1,27 +1,34 @@
 package io.dddbyexamples.employment.minimallevel;
 
-public class SomethingWithStatements {
+import io.dddbyexamples.shared.AcademicYear;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+class SomethingWithStatements {
+
+    private long employeeId;
+    private AcademicYear academicYear;
 
     private EmploymentRules employmentRules;
-    private CoursOfStudiesRules coursOfStudiesRules;
+    private CourseOfStudiesRules courseOfStudiesRules;
     private StatementsRules statementsRules;
-//
-//    private StatementsRepository repository;
-//    private Events events;
-//
-//    public Result submitStatement(SubmitEmployeeMinimulLevelOfEmploymentStatement command) {
-//
-//        Result statementRulesResult = statementsRules.check(command);
-//        Result employmentRulesResult = employmentRules.check(command);
-//        Result coursOfStudiesRulesResult = coursOfStudiesRules.check(command);
-//
-//        if (statementRulesResult.and(employmentRulesResult.and(coursOfStudiesRulesResult).isCorrect())) {
-//            repository.save(command.getStatement());
-//            events.emit(new StatementSubmited());
-//
-//            if (statementRulesResult.and(employmentRulesResult.and(coursOfStudiesRulesResult).isSuspended())) {
-//                events.emit(new StatementSuspended());
-//            }
-//        }
-//    }
+
+    private LevelsOfEmploymentEvents events;
+
+    Result submitStatement(Statement command) {
+        Result result = Result.combine(
+                statementsRules.check(command),
+                employmentRules.check(command),
+                courseOfStudiesRules.check(command)
+        );
+
+        if (result.isAccepted()) {
+            events.emit(new StatementSubmitted());
+
+            if (result.isSuspended()) {
+                events.emit(new StatementSuspended());
+            }
+        }
+        return result;
+    }
 }
