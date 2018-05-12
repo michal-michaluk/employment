@@ -27,13 +27,17 @@ class SomethingWithStatements {
             events.emit(translateToEvent(statement));
 
             if (result.isSuspended()) {
-                events.emit(new StatementSuspended());
+                events.emit(translateSuspendedStatement(statement));
             }
         }
         return result;
     }
 
+    private StatementSuspended translateSuspendedStatement(Statement statement) {
+        return new StatementSuspended(statement.getEmployeeId(), statement.getCourses());
+    }
+
     private StatementSubmitted translateToEvent(Statement statement) {
-        return new StatementSubmitted(statement.getCourses(), statement.getHours());
+        return new StatementSubmitted(statement.getEmployeeId(), statement.getCourses(), statement.getHours());
     }
 }
